@@ -1,7 +1,7 @@
 const API_BASE = process.env.VITE_API_BASE; // your .env
 
 export const sendMessage = async (threadId, message) => {
-  const response = await fetch(`${API_BASE}/chat`, {
+  const response = await fetch(`${API_BASE}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ threadId, message }),
