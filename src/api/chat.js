@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE; // your .env
+const API_BASE = process.env.VITE_API_BASE; // your .env
 
 export const sendMessage = async (threadId, message) => {
   const response = await fetch(`${API_BASE}/chat`, {
