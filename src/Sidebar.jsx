@@ -3,23 +3,35 @@ import { useContext, useEffect } from "react"
 import { MyContext } from "./Context"
 import {v1 as uuidv1} from "uuid"
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 
 function Sidebar(){
     const {allThreads,setAllThreads,currthreadId,setNewChat,setPrompt,setReply,setcurrThreadId,setPrevChats}=useContext(MyContext);
 
    const getAllThreads=async ()=>{
     try{
-        const response=await fetch("http://localhost:8080/api/thread");
-        const res = await response.json();
-        const filteredData = res.map(thread=>({threadId:thread.threadId,title:thread.title}))
-        // console.log(filteredData);
-        setAllThreads(filteredData);
-
-    }catch(err){
-        console.log(err);
-    }
-
+       
+       const response=await fetch(`${API_BASE}/api/thread`);
+       // -------------------
+       const res = await response.json();
+       // ... rest of the function
+   }catch(err){
+       console.log(err);
+   }
    };
+//     try{
+//         const response=await fetch("http://localhost:8080/api/thread");
+//         const res = await response.json();
+//         const filteredData = res.map(thread=>({threadId:thread.threadId,title:thread.title}))
+//         // console.log(filteredData);
+//         setAllThreads(filteredData);
+
+//     }catch(err){
+//         console.log(err);
+//     }
+
+//    };
 
    useEffect(()=>{
     getAllThreads();
@@ -37,9 +49,10 @@ function Sidebar(){
 
    const changeThread=async(newthreadId)=>{
     setcurrThreadId(newthreadId);
-
     try{
-        const response=await fetch(`http://localhost:8080/api/thread/${newthreadId}`);
+        // --- CHANGED LINE ---
+        const response=await fetch(`${API_BASE}/api/thread/${newthreadId}`);
+        // --------------------
         const res=await response.json();
         console.log(res);
         setPrevChats(res);
@@ -50,24 +63,47 @@ function Sidebar(){
         console.log(err);
     }
 
+    // try{
+    //     const response=await fetch(`http://localhost:8080/api/thread/${newthreadId}`);
+    //     const res=await response.json();
+    //     console.log(res);
+    //     setPrevChats(res);
+    //     setNewChat(false);
+    //     setReply(null);
+
+    // }catch(err){
+    //     console.log(err);
+    // }
+
    }
 
    const deleteThread=async(threadId)=>{
-       try{
-        const response=await fetch(`http://localhost:8080/api/thread/${threadId}`,{method:"delete"});
+    try{
+        // --- CHANGE HERE ---
+        const response=await fetch(`${API_BASE}/api/thread/${threadId}`,{method:"delete"});
+        // -------------------
         const res=await response.json();
         
+        // ... rest of the function
+    }catch(err){
+       console.log(err);
+    }
+   
+    //    try{
+    //     const response=await fetch(`http://localhost:8080/api/thread/${threadId}`,{method:"delete"});
+    //     const res=await response.json();
+        
 
-        //updated threads rerender
-        setAllThreads(prev=>prev.filter(thread=>thread.threadId!==threadId));
+    //     //updated threads rerender
+    //     setAllThreads(prev=>prev.filter(thread=>thread.threadId!==threadId));
 
-        if(threadId===currthreadId){
-            createNewChat();
-        }
+    //     if(threadId===currthreadId){
+    //         createNewChat();
+    //     }
 
-       }catch(err){
-        console.log(err);
-       }
+    //    }catch(err){
+    //     console.log(err);
+    //    }
    }
 
     return(

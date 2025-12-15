@@ -6,9 +6,6 @@ import {ScaleLoader} from "react-spinners"
 import { sendMessage } from "./api/chat.js";
 
 
-
-
-
 function ChatWindow(){
     const {prompt,setPrompt,reply,setReply,currthreadId, prevChats,setPrevChats,setNewChat}=useContext(MyContext)
     const [loading,setLoading]=useState(false);
@@ -29,7 +26,7 @@ function ChatWindow(){
     }
 
     setLoading(false);
-};
+    };
 
 
     // const getReply=async()=>{
