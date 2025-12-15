@@ -3,6 +3,8 @@ import Chat from "./Chat.jsx"
 import { MyContext } from "./Context.jsx"
 import { useContext, useState, useEffect } from "react"
 import {ScaleLoader} from "react-spinners"
+import { sendMessage } from "../api/chat.js";
+
 
 
 
@@ -11,35 +13,53 @@ function ChatWindow(){
     const [loading,setLoading]=useState(false);
     const [isOpen,setIsOpen]=useState(false);
 
-    const getReply=async()=>{
-        
-        setNewChat(false);
-        setLoading(true);
+    const getReply = async () => {
+    setNewChat(false);
+    setLoading(true);
 
-        console.log("message:",prompt,"threadID:",currthreadId)
-        const options={
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                message:prompt,
-                threadId:currthreadId
-            })
-        };
+    console.log("message:", prompt, "threadID:", currthreadId);
 
-        try{
-            const response=await fetch("http://localhost:8080/api/chat",options)
-            const rep=await response.json();
-            console.log(rep)
-            setReply(rep.reply);
-            
-        }catch(err){
-            console.log(err)
-        }
-         setLoading(false);
-
+    try {
+        const rep = await sendMessage(currthreadId, prompt); // <-- Vercel backend
+        console.log(rep);
+        setReply(rep);
+    } catch (err) {
+        console.log(err);
     }
+
+    setLoading(false);
+};
+
+
+    // const getReply=async()=>{
+        
+    //     setNewChat(false);
+    //     setLoading(true);
+
+    //     console.log("message:",prompt,"threadID:",currthreadId)
+    //     const options={
+    //         method:"POST",
+    //         headers:{
+    //             "Content-Type":"application/json"
+    //         },
+    //         body:JSON.stringify({
+    //             message:prompt,
+    //             threadId:currthreadId
+    //         })
+    //     };
+
+    //     try{
+    //         const response=await fetch("http://localhost:8080/api/chat",options)
+    //         const rep=await response.json();
+    //         console.log(rep)
+    //         setReply(rep.reply);
+            
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    //      setLoading(false);
+
+    // }
 
     //append new chat to prev chats
 
