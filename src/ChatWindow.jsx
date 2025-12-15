@@ -3,7 +3,8 @@ import Chat from "./Chat.jsx"
 import { MyContext } from "./Context.jsx"
 import { useContext, useState, useEffect } from "react"
 import {ScaleLoader} from "react-spinners"
-import { sendMessage } from "../api/chat.js";
+import { sendMessage } from "./api/chat.js";
+
 
 
 
