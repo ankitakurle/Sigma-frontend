@@ -7,6 +7,11 @@ export const sendMessage = async (threadId, message) => {
     body: JSON.stringify({ threadId, message }),
   });
 
+  if (!response.ok) {
+    throw new Error("Chat API failed");
+  }
+
   const data = await response.json();
   return data.reply;
 };
+
