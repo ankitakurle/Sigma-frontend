@@ -22,12 +22,12 @@ function Sidebar() {
       const response = await fetch(`${API_BASE}/api/thread`);
       const res = await response.json();
 
-      const filtered = res.map(t => ({
-        threadId: t.threadId,
-        title: t.title
-      }));
-
-      setAllThreads(filtered);   // ✅ FIXED
+      setAllThreads(
+        res.map(t => ({
+          threadId: t.threadId,
+          title: t.title
+        }))
+      );
     } catch (err) {
       console.error(err);
     }
@@ -58,21 +58,52 @@ function Sidebar() {
     }
   };
 
+  // ✅ DELETE THREAD (WORKING)
+  const deleteThread = async (e, threadId) => {
+    e.stopPropagation(); // ⛔ stop opening thread
+
+    try {
+      await fetch(`${API_BASE}/api/thread/${threadId}`, {
+        method: "DELETE"
+      });
+
+      // 🔥 Update UI immediately
+      setAllThreads(prev =>
+        prev.filter(t => t.threadId !== threadId)
+      );
+
+      // if deleted thread was open → reset chat
+      if (threadId === currthreadId) {
+        createNewChat();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <section className="sidebar">
       <button onClick={createNewChat}>
         <img src="/blacklogo.png" alt="logo" className="logo" />
-        <span><i className="fa-solid fa-pen-to-square"></i></span>
+        <span>
+          <i className="fa-solid fa-pen-to-square"></i>
+        </span>
       </button>
 
       <ul className="history">
-        {allThreads?.map((t) => (
+        {allThreads.map(thread => (
           <li
-            key={t.threadId}
-            className={t.threadId === currthreadId ? "highlighted" : ""}
-            onClick={() => changeThread(t.threadId)}
+            key={thread.threadId}
+            className={thread.threadId === currthreadId ? "highlighted" : ""}
+            onClick={() => changeThread(thread.threadId)}
           >
-            {t.title}
+            {thread.title}
+
+            {/* ✅ DELETE ICON */}
+            <i
+              className="fa-solid fa-trash"
+              onClick={(e) => deleteThread(e, thread.threadId)}
+            ></i>
           </li>
         ))}
       </ul>
@@ -85,3 +116,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+
